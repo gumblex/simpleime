@@ -14,8 +14,9 @@ index = {}
 prob = {}
 abbr = {}
 
+chdict = {}
 started = False
-with open('luna_pinyin.dict.yaml') as f:
+with open('luna_pinyin.dict.yaml', 'r', encoding='utf-8') as f:
     for ln in f:
         ln = ln.strip()
         if started and ln and ln[0] != '#':
@@ -30,6 +31,10 @@ with open('luna_pinyin.dict.yaml') as f:
                     abbr[c[0]].add(c)
                 else:
                     abbr[c[0]] = set((c,))
+                if w in chdict:
+                    chdict[w].append(c)
+                else:
+                    chdict[w] = [c]
             if len(l) == 3:
                 if l[2][-1] == '%':
                     p = float(l[2][:-1])/100
@@ -38,6 +43,26 @@ with open('luna_pinyin.dict.yaml') as f:
                 prob[(w, c)] = log(p or 0.00005)
         elif ln == '...':
             started = True
+
+with open('essay.txt', 'r', encoding='utf-8') as f:
+    for ln in f:
+        word, freq = ln.strip().split('\t')
+        if len(word) > 1:
+            code = []
+            for ch in word:
+                d = chdict.get(ch, ())
+                if len(d) < 1:
+                    break
+                c = sorted(d, key=lambda x: prob.get((ch, x), 0), reverse=True)
+                code.append(c[0])
+            else:
+                c = ''.join(code)
+                #print(c, word)
+                if c in index:
+                    index[c].append(word)
+                else:
+                    index[c] = [word]
+
 
 for c in index:
     ws = index[c]
@@ -62,7 +87,7 @@ p_index = '''
 
 pf = pprint.PrettyPrinter(indent=0).pformat
 
-with open('pinyinlookup.py', 'wb') as f:
+with open('pinyinlookup.py', 'w') as f:
     f.write(header)
     f.write(pf(index))
     f.write('\n\np_prob = ')
