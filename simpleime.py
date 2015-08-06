@@ -44,8 +44,6 @@ def pinyininput(sentence):
                 edges[(k, k)] = max(((w, essayget(w) + p_prob.get((w, frag), 0)) for w, frag in itertools.chain.from_iterable(((wrd, c) for wrd in p_index[c]) for c in abbr)), key=_ig1)
         DAG[k] = tmplist
 
-    print(DAG)
-
     route = {N: (0, 0)}
     for idx in range(N - 1, -1, -1):
         route[idx] = max((edges.get((idx,x), (None, -50))[1] + route[x + 1][0], x) for x in DAG[idx])
@@ -56,7 +54,7 @@ def pinyininput(sentence):
         y = route[x][1]
         result.append(edges.get((x, y), (sentence[x:y+1].encode('utf-8'), -50))[0])
         x = y + 1
-    print(result)
+
     return b''.join(result).decode('utf-8')
 
 if __name__ == '__main__':
