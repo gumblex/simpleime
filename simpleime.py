@@ -34,14 +34,14 @@ def pinyininput(sentence):
             words = p_index[frag]
             if words[0]:
                 tmplist.append(i)
-                edges[(k, i)] = max(((w, essayget(w) + p_prob.get((w, frag), 0)) for w in words), key=_ig1)
+                edges[(k, i)] = max(((w, essayget(w) + p_prob.get((w.decode('utf-8'), frag), 0)) for w in words), key=_ig1)
             i += 1
             frag = sentence[k:i + 1]
         if not tmplist:
             tmplist.append(k)
             abbr = p_abbr.get(sentence[k])
             if abbr:
-                edges[(k, k)] = max(((w, essayget(w) + p_prob.get((w, frag), 0)) for w, frag in itertools.chain.from_iterable(((wrd, c) for wrd in p_index[c]) for c in abbr)), key=_ig1)
+                edges[(k, k)] = max(((w, essayget(w) + p_prob.get((w.decode('utf-8'), frag), 0)) for w, frag in itertools.chain.from_iterable(((wrd, c) for wrd in p_index[c]) for c in abbr)), key=_ig1)
         DAG[k] = tmplist
 
     route = {N: (0, 0)}
