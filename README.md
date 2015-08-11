@@ -10,7 +10,7 @@ A Simple Pinyin IME written in Python.
 
 * Download [luna_pinyin.dict.yaml](https://github.com/rime/brise/raw/master/preset/luna_pinyin.dict.yaml) from Rime.
 * Run `python3 makeindex.py`.
-* Put the generated *.dawg and pinyinlookup.py into your working directory.
+* Put the generated \*.dawg and pinyinlookup.py into your working directory.
 
 ## Usage
 
